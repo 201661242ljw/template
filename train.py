@@ -56,7 +56,7 @@ def main():
             train_loss += loss_batch.item()
 
             train_epoch_bar.set_postfix(loss=f"{train_loss / (j_train + 1) :.6f}",
-                                        curant_loss=f"{loss_batch.item():.6f}")
+                                        current_loss=f"{loss_batch.item():.6f}")
 
         print("\nTrain Finished")
         # val
@@ -71,7 +71,7 @@ def main():
                 loss_batch = my_loss(outputs, targets)
             val_loss += loss_batch.item()
             train_epoch_bar.set_postfix(loss=f"{val_loss / (j_val + 1) :.6f}",
-                                        curant_loss=f"{loss_batch.item():.6f}")
+                                        current_loss=f"{loss_batch.item():.6f}")
 
         print(f"\nEpoch_num:{i}, Train_loss:{train_loss / (j_train + 1) :.6f}, Val_loss:{val_loss / (j_val + 1) :.6f}")
 

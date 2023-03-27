@@ -1,7 +1,7 @@
   train_data: "datasets/annotations/train_dataset.txt"
   val_data: "datasets/annotations/val_dataset.txt"
 
-  batch_size: 2
+  batch_size: 16
   model_path: ''
 
   lr: 0.0001
