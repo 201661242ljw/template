@@ -1,4 +1,4 @@
-import torch
+import os.path
 import numpy as np
 import torch.optim as optim
 import yaml
@@ -75,10 +75,11 @@ def main():
 
         print(f"\nEpoch_num:{i}, Train_loss:{train_loss / (j_train + 1) :.6f}, Val_loss:{val_loss / (j_val + 1) :.6f}")
 
-        torch.save(model.state_dict(),
-                   'logs/ep%03d-loss%.6f-val_loss%.6f.pth' % (i + 1, train_loss / (j_train + 1), val_loss / (j_val + 1)))
+        if not os.path.exists(r"logs"):
+            os.makedirs(r"logs")
 
-    pass
+        torch.save(model.state_dict(), 'logs/ep%03d-loss%.6f-val_loss%.6f.pth' % (
+            i + 1, train_loss / (j_train + 1), val_loss / (j_val + 1)))
 
 
 if __name__ == '__main__':
