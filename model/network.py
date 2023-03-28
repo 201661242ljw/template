@@ -233,13 +233,13 @@ class MyNet(nn.Module):
 
         self.in_channels = 64
 
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
 
         self.sigmoid = nn.Sigmoid()
 
-        self.layer1 = self.make_layer(block, 64, num_blocks[0], stride=1)
+        self.layer1 = self.make_layer(block, 64, num_blocks[0], stride=2)
         self.layer2 = self.make_layer(block, 128, num_blocks[1], stride=2)
         self.layer3 = self.make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self.make_layer(block, 512, num_blocks[3], stride=2)
@@ -249,8 +249,8 @@ class MyNet(nn.Module):
 
         self.deconv = nn.Sequential(
             nn.ConvTranspose2d(512, 256, kernel_size=4, stride=2, padding=1),
-            # nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=0),
-            # nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=0)
+            nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=1)
         )
 
         self.final = nn.Conv2d(256, 3, 1, 1)
