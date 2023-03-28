@@ -244,8 +244,17 @@ class MyNet(nn.Module):
         self.layer3 = self.make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self.make_layer(block, 512, num_blocks[3], stride=2)
 
-        self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512, num_classes)
+        # self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
+        # self.fc = nn.Linear(512, num_classes)
+
+        self.deconv = nn.Sequential(
+            nn.ConvTranspose2d(512, 256, kernel_size=4, stride=2, padding=1),
+            # nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=0),
+            # nn.ConvTranspose2d(256, 256, kernel_size=4, stride=2, padding=0)
+        )
+
+        self.final = nn.Conv2d(256, 3, 1, 1)
+
 
     def make_layer(self, block, out_channels, num_blocks, stride):
         layers = []
@@ -265,10 +274,12 @@ class MyNet(nn.Module):
         out = self.layer3(out)
         out = self.layer4(out)
 
-        out = self.avg_pool(out)
-        out = out.view(out.size(0), -1)
-        out = self.fc(out)
-
+        out = self.deconv(out)
+        out = self.final(out)
+        # out = self.avg_pool(out)
+        # out = out.view(out.size(0), -1)
+        # out = self.fc(out)
+        #
         out = self.sigmoid(out)
 
         return out

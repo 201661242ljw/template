@@ -7,16 +7,17 @@ from tqdm import tqdm
 from model.network import MyNet as net
 from units.dataloader import MyDataset, DataLoader
 from units.weights_init import weights_init
-from units.loss import MyLoss as my_loss
+# from units.loss import MyLoss as my_loss
+from units.loss import MyLoss_heatmap as my_loss
 import torch
 
 
 def main():
     # 创建数据加载器
-    train_dataset = MyDataset(train_data)
+    train_dataset = MyDataset(train_data, sigma=sigma)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-    val_dataset = MyDataset(val_data)
+    val_dataset = MyDataset(val_data, sigma=sigma)
     val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
     # 构建网络
@@ -47,10 +48,10 @@ def main():
         train_epoch_bar = tqdm(train_dataloader, desc=f"Epoch {i}/{num_epoch}")
 
         for j_train, batch in enumerate(train_epoch_bar):
-            datas, targets = batch[0].cuda(), batch[1].cuda()
+            datas, targets, targets_weight = batch[0].cuda(), batch[1].cuda(), batch[2].cuda()
 
             outputs = model(datas)
-            loss_batch = my_loss(outputs, targets)
+            loss_batch = my_loss(outputs, targets, targets_weight)
             loss_batch.backward()
             optimizer.step()
             train_loss += loss_batch.item()
@@ -68,7 +69,7 @@ def main():
             datas, targets = batch[0].cuda(), batch[1].cuda()
             with torch.no_grad():
                 outputs = model(datas)
-                loss_batch = my_loss(outputs, targets)
+                loss_batch = my_loss(outputs, targets, targets_weight)
             val_loss += loss_batch.item()
             train_epoch_bar.set_postfix(loss=f"{val_loss / (j_val + 1) :.6f}",
                                         current_loss=f"{loss_batch.item():.6f}")
@@ -94,5 +95,7 @@ if __name__ == '__main__':
     num_epoch = train_config["num_epoch"]
 
     model_layers = train_config["model_layers"]
+
+    sigma = train_config["sigma"]
 
     main()
