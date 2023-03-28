@@ -93,9 +93,12 @@ if __name__ == '__main__':
 
     parser.add_argument('--lr', type=float, default=0.0001)
     parser.add_argument('--num_epoch', type=int, default=100)
-    parser.add_argument('--model_layers', type=list, default=[2, 2, 2, 2])
+    parser.add_argument('--model_layers', type=int, default=50)
     parser.add_argument('--sigma', type=int, default=2)
     args = parser.parse_args()
+
+
+
 
     train_data = args.train_data
     val_data = args.val_data
@@ -103,8 +106,12 @@ if __name__ == '__main__':
     model_path = args.model_path
     lr = args.lr
     num_epoch = args.num_epoch
-    model_layers = args.model_layers
     sigma = args.sigma
+
+
+    model_layers = {50:[3,4,6,3],
+                    18:[2,2,2,2],
+                    34:[2,3,4,3]}[args.model_layers]
 
     main()
 
