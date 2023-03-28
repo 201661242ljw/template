@@ -10,6 +10,7 @@ from units.weights_init import weights_init
 # from units.loss import MyLoss as my_loss
 from units.loss import MyLoss_heatmap as my_loss
 import torch
+import argparse
 
 
 def main():
@@ -84,18 +85,42 @@ def main():
 
 
 if __name__ == '__main__':
-    with open('./config/train_config.yaml', 'r') as f:
-        train_config = yaml.load(f, Loader=yaml.FullLoader)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--train_data', type=str, default="datasets/annotations/train_dataset.txt")
+    parser.add_argument('--val_data', type=str, default="datasets/annotations/val_dataset.txt")
+    parser.add_argument('--batch_size', type=int, default=2)
+    parser.add_argument('--model_path', type=str, default=r"")
 
-    train_data = train_config["train_data"]
-    val_data = train_config["val_data"]
-    batch_size = train_config["batch_size"]
-    model_path = train_config["model_path"]
-    lr = train_config["lr"]
-    num_epoch = train_config["num_epoch"]
+    parser.add_argument('--lr', type=float, default=0.0001)
+    parser.add_argument('--num_epoch', type=int, default=100)
+    parser.add_argument('--model_layers', type=list, default=[2, 2, 2, 2])
+    parser.add_argument('--sigma', type=int, default=2)
+    args = parser.parse_args()
 
-    model_layers = train_config["model_layers"]
-
-    sigma = train_config["sigma"]
+    train_data = args.train_data
+    val_data = args.val_data
+    batch_size = args.batch_size
+    model_path = args.model_path
+    lr = args.lr
+    num_epoch = args.num_epoch
+    model_layers = args.model_layers
+    sigma = args.sigma
 
     main()
+
+    # #
+    # with open('./config/train_config.yaml', 'r') as f:
+    #     train_config = yaml.load(f, Loader=yaml.FullLoader)
+    #
+    # train_data = train_config["train_data"]
+    # val_data = train_config["val_data"]
+    # batch_size = train_config["batch_size"]
+    # model_path = train_config["model_path"]
+    # lr = train_config["lr"]
+    # num_epoch = train_config["num_epoch"]
+    #
+    # model_layers = train_config["model_layers"]
+    #
+    # sigma = train_config["sigma"]
+    #
+    # main()
