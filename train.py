@@ -67,7 +67,7 @@ def main():
 
         val_epoch_bar = tqdm(val_dataloader, desc=f"Epoch {i}/{num_epoch}")
         for j_val, batch in enumerate(val_epoch_bar):
-            datas, targets = batch[0].cuda(), batch[1].cuda()
+            datas, targets, targets_weight = batch[0].cuda(), batch[1].cuda(), batch[2].cuda()
             with torch.no_grad():
                 outputs = model(datas)
                 loss_batch = my_loss(outputs, targets, targets_weight)
